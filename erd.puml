@@ -1,0 +1,78 @@
+@startuml
+
+!theme plain
+skinparam linetype ortho
+
+entity "users" {
+  + id: bigint
+  --
+  name: varchar
+  email: varchar
+  ...
+}
+
+entity "customers" {
+  + id: bigint
+  --
+  name: varchar
+  contact_person: varchar
+  email: varchar
+  phone: varchar
+  address: text
+}
+
+entity "printers" {
+  + id: bigint
+  --
+  name: varchar
+  model: varchar
+  status: varchar
+}
+
+entity "print_jobs" {
+  + id: bigint
+  --
+  # customer_id: bigint <<FK>>
+  job_title: varchar
+  description: text
+  due_date: date
+  status: varchar
+  # assigned_to: bigint <<FK>>
+}
+
+entity "tarpaulins" {
+  + id: bigint
+  --
+  # print_job_id: bigint <<FK>>
+  width: decimal
+  height: decimal
+  quantity: int
+  material: varchar
+  layout_file_path: varchar
+  status: varchar
+}
+
+entity "print_batches" {
+  + id: bigint
+  --
+  # printer_id: bigint <<FK>>
+  started_at: timestamp
+  completed_at: timestamp
+}
+
+entity "tarpaulin_print_batch" {
+    # tarpaulin_id: bigint <<FK>>
+    # print_batch_id: bigint <<FK>>
+}
+
+
+' Relationships
+customers ||--o{ print_jobs : "has"
+users ||--o{ print_jobs : "is assigned"
+print_jobs ||--o{ tarpaulins : "contains"
+printers ||--o{ print_batches : "has"
+tarpaulins }o--|| tarpaulin_print_batch : "belongs to"
+print_batches }o--|| tarpaulin_print_batch : "contains"
+
+
+@enduml
